@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12352f">
+  <meta name="description" content="Bitácora guiada de actividades para compartir reportes por WhatsApp.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <title>Bitácora de actividad</title>
+  <style>
+    :root{color-scheme:light;--ink:#17342f;--muted:#607570;--green:#13745f;--green2:#dff2eb;--paper:#f3f7f5;--line:#d8e4df;--orange:#c87522;--shadow:0 16px 36px #163b3020}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);min-height:100vh}
+    button,input,textarea,select{font:inherit}button{cursor:pointer}.shell{max-width:620px;margin:auto;min-height:100vh;padding:0 18px 32px}
+    header{padding:calc(18px + env(safe-area-inset-top)) 2px 14px;display:flex;align-items:center;gap:12px}.brand{width:44px;height:44px;border-radius:15px;background:var(--green);display:grid;place-items:center;color:white;font-size:22px;box-shadow:0 7px 16px #13745f33}.brand-title{font-weight:800;font-size:17px;letter-spacing:.01em}.brand-sub{font-size:12px;color:var(--muted)}
+    main{padding-top:8px}.card{background:white;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}h1{font-size:27px;line-height:1.15;margin:8px 0 10px;letter-spacing:-.03em}p{margin:0 0 16px;color:var(--muted)}
+    .choices{display:grid;gap:12px;margin-top:24px}.choice{width:100%;border:0;border-radius:18px;background:var(--green);color:#fff;padding:17px 18px;text-align:left;display:flex;align-items:center;gap:14px;font-weight:750;box-shadow:0 8px 17px #13745f27}.choice.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}.choice .emoji{font-size:24px}.choice small{display:block;font-weight:450;opacity:.82;margin-top:2px}
+    .topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}.text-button{background:transparent;border:0;color:var(--green);font-weight:700;padding:8px 4px}.progress{font-size:12px;color:var(--muted);font-weight:700}.bar{height:6px;background:#e7efeb;border-radius:9px;overflow:hidden;margin:0 0 22px}.bar span{display:block;height:100%;background:var(--green);border-radius:9px;transition:width .2s ease}.field-label{font-weight:800;font-size:21px;line-height:1.25;margin:0 0 7px}.field-help{font-size:13px;margin:0 0 14px}.control{width:100%;min-height:52px;border-radius:14px;border:1px solid #cbd9d3;background:#fff;padding:12px 14px;color:var(--ink);outline:none}.control:focus{border-color:var(--green);box-shadow:0 0 0 3px #13745f20}.control[type=time]{min-height:54px}.control.textarea{min-height:112px;resize:vertical}.filebox{border:1.5px dashed #b8cbc2;border-radius:16px;padding:16px;background:#fbfdfc}.filebox input{max-width:100%}.photo-preview{max-width:100%;max-height:230px;display:block;margin-top:12px;border-radius:12px}.voice-row{display:flex;gap:8px;margin-top:10px}.pill{border:1px solid var(--line);background:#fff;color:var(--green);font-weight:700;border-radius:999px;padding:9px 12px}.actions{display:flex;gap:10px;margin-top:24px}.primary,.outline{border-radius:14px;padding:13px 16px;font-weight:800}.primary{border:0;background:var(--green);color:white;flex:1}.outline{border:1px solid var(--line);background:white;color:var(--ink)}.hint{font-size:12px;color:var(--muted);margin-top:14px}.message{white-space:pre-wrap;word-break:break-word;background:#f7faf8;border:1px solid var(--line);border-radius:16px;padding:16px;font-size:14px;max-height:45vh;overflow:auto}.done-icon{font-size:42px;margin-bottom:6px}.alert{background:#fff4e6;border:1px solid #f0d5b1;color:#6d451d;padding:12px;border-radius:13px;font-size:13px;margin:14px 0}.saved{background:var(--green2);border-radius:12px;padding:11px 13px;font-size:13px;color:#155545;margin-bottom:16px}.hidden{display:none!important}
+    footer{padding:18px 4px 0;text-align:center;color:var(--muted);font-size:11px}
+    @media(min-width:540px){.shell{padding-left:24px;padding-right:24px}main{padding-top:22px}.card{padding:30px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div class="brand">✓</div><div><div class="brand-title">Bitácora de actividad</div><div class="brand-sub">Reportes listos para WhatsApp</div></div></header>
+    <main id="app" aria-live="polite"></main>
+    <footer>Los datos del reporte se guardan solo en este teléfono.</footer>
+  </div>
+  <script>
+  (()=>{
+    const app=document.getElementById('app');
+    const STORE='bitacora-actividad-v1';
+    const nowTime=()=>{const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+    const load=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch{return {}}};
+    const save=x=>localStorage.setItem(STORE,JSON.stringify(x));
+    let data=load(),flow='',step=0,answers={},photoFile=null,photoUrl=null;
+    const common=[
+      {key:'leader',label:'¿Quién es el líder de cuadrilla?',help:'Di tu nombre o el nombre que debe aparecer.',type:'text',required:true},
+      {key:'auxiliary',label:'¿Quién va contigo?',help:'Puedes escribir “Ninguno” si vas solo.',type:'text',required:true},
+      {key:'client',label:'¿A qué cliente o sitio vas?',help:'',type:'text',required:true},
+      {key:'ot',label:'¿Cuál es la OT o ticket?',help:'Si no aplica, escribe N/A.',type:'text',required:true},
+      {key:'rdo',label:'¿Cuál es el RDO?',help:'Si no aplica, escribe N/A.',type:'text',required:true}
+    ];
+    const starts=[
+      common[0],common[1],common[2],
+      {key:'location',label:'¿En qué ubicación o municipio?',help:'',type:'text',required:true},
+      {key:'activity',label:'¿Qué tipo de actividad vas a realizar?',help:'',type:'select',options:['Instalación','Visita','Soporte','Desinstalación','Mantenimiento'],required:true},
+      common[3],common[4],
+      {key:'startTime',label:'¿A qué hora inicias?',help:'La hora del teléfono ya está puesta; puedes corregirla.',type:'time',required:true,default:nowTime},
+      {key:'workPlanned',label:'¿Qué trabajo vas a realizar?',help:'Descríbelo brevemente.',type:'textarea',required:true},
+      {key:'startPending',label:'¿Hay pendientes que deban anotarse desde el inicio?',help:'Di “Ninguno” si no hay.',type:'textarea',required:true},
+      {key:'startPhoto',label:'¿Quieres adjuntar la evidencia inicial?',help:'Puedes tomar una foto o elegirla de tu galería.',type:'photo',required:false}
+    ];
+    const closes=[
+      common[0],common[1],common[2],common[3],common[4],
+      {key:'endTime',label:'¿A qué hora terminó la actividad?',help:'La hora del teléfono ya está puesta; puedes corregirla.',type:'time',required:true,default:nowTime},
+      {key:'result',label:'¿Cuál fue el resultado?',help:'',type:'select',options:['Terminado','Parcial','No realizado'],required:true},
+      {key:'workDone',label:'¿Qué trabajo se realizó?',help:'Cuéntamelo brevemente.',type:'textarea',required:true},
+      {key:'incident',label:'¿Hubo pendiente o incidencia?',help:'Escribe “Ninguno” o describe lo ocurrido.',type:'textarea',required:true},
+      {key:'closePending',label:'¿Qué pendientes quedan para seguimiento?',help:'Di “Ninguno” si ya quedó todo resuelto.',type:'textarea',required:true},
+      {key:'endPhoto',label:'¿Quieres adjuntar la evidencia final?',help:'Puedes tomar una foto o elegirla de tu galería.',type:'photo',required:false}
+    ];
+    function speak(text){try{if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='es-MX';speechSynthesis.speak(u)}}catch{}}
+    function sayButton(text){return `<button class="pill" id="say">🔊 Escuchar pregunta</button>`}
+    function home(){flow='';photoFile=null;photoUrl=null;const active=data.active;app.innerHTML=`<section class="card"><div class="eyebrow">Hola${data.name?`, ${esc(data.name)}`:''}</div><h1>¿Qué quieres hacer?</h1><p>Elige una opción y te voy preguntando todo en orden.</p><button class="pill" id="sayhome">🔊 Escuchar</button>${active?`<div class="saved">Hay una actividad iniciada para <strong>${esc(active.client||'este sitio')}</strong>. Puedes cerrarla ahora.</div>`:''}<div class="choices"><button class="choice" id="start"><span class="emoji">🟢</span><span>Iniciar actividad<small>Prepara el reporte de inicio</small></span></button><button class="choice secondary" id="close"><span class="emoji">🏁</span><span>Cerrar actividad<small>Completa el reporte de cierre</small></span></button></div><div class="actions"><button class="outline" id="setname">Mi nombre</button><button class="text-button" id="clear">Borrar borrador</button></div><div class="hint">Puedes contestar escribiendo o usando el micrófono del teclado.</div></section>`;
+      document.getElementById('sayhome').onclick=()=>speak('Hola. ¿Qué quieres hacer? Iniciar actividad o cerrar actividad.');document.getElementById('start').onclick=()=>begin('start');document.getElementById('close').onclick=()=>begin('close');document.getElementById('setname').onclick=()=>{const n=prompt('¿Qué nombre quieres guardar como líder de cuadrilla?',data.name||'');if(n!==null){data.name=n.trim();save(data);home()}};document.getElementById('clear').onclick=()=>{if(confirm('¿Borramos los datos guardados de esta actividad en este teléfono?')){data={name:data.name};save(data);home()}};setTimeout(()=>speak('Hola. ¿Qué quieres hacer? Iniciar actividad o cerrar actividad.'),300)}
+    function begin(which){flow=which;step=0;photoFile=null;photoUrl=null;answers=which==='close'&&data.active?{...data.active}:{};const fields=which==='start'?starts:closes;if(which==='start'){answers.startTime=nowTime()}else{answers.endTime=nowTime()}renderStep()}
+    function renderStep(){const fields=flow==='start'?starts:closes;const f=fields[step];if(!f){showReview();return}if(f.type==='photo'){photoFile=null;if(photoUrl){URL.revokeObjectURL(photoUrl);photoUrl=null}}
+      let control='';const val=answers[f.key]??(f.default?f.default():'');
+      if(f.type==='select')control=`<select class="control" id="answer"><option value="">Elige una opción</option>${f.options.map(o=>`<option ${val===o?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+      else if(f.type==='textarea')control=`<textarea class="control textarea" id="answer" placeholder="Escribe o dicta tu respuesta">${esc(val)}</textarea>`;
+      else if(f.type==='photo')control=`<div class="filebox"><input id="answer" type="file" accept="image/*" capture="environment"><div class="hint">${answers[f.key]?'Hay una foto seleccionada. Si eliges otra, se reemplaza.':'En algunos teléfonos puedes tomarla directamente desde aquí.'}</div><img id="preview" class="photo-preview ${answers[f.key]?'':'hidden'}" alt="Vista previa"></div>`;
+      else control=`<input class="control" id="answer" type="${f.type==='time'?'time':'text'}" value="${esc(val)}" placeholder="Escribe o dicta tu respuesta" ${f.type==='text'?'autocomplete="off"':''}>`;
+      const current=flow==='start'?answers[f.key]:answers[f.key];
+      app.innerHTML=`<section class="card"><div class="topline"><button class="text-button" id="home">← Inicio</button><div class="progress">${step+1} de ${fields.length}</div></div><div class="bar"><span style="width:${Math.round((step+1)/fields.length*100)}%"></span></div><div class="eyebrow">${flow==='start'?'Inicio de actividad':'Cierre de actividad'}</div><h2 class="field-label">${esc(f.label)}</h2>${f.help?`<p class="field-help">${esc(f.help)}</p>`:''}${control}${f.type!=='photo'&&f.type!=='select'?`<div class="voice-row"><button class="pill" id="dictate">🎙 Dictar respuesta</button></div>`:''}<div class="actions"><button class="outline" id="back" ${step===0?'disabled':''}>Atrás</button><button class="primary" id="next">${step===fields.length-1?'Revisar reporte':'Siguiente'}</button></div><div class="hint">Los datos que ya registraste para esta actividad se completan automáticamente; puedes corregirlos.</div></section>`;
+      document.getElementById('home').onclick=home;document.getElementById('back').onclick=()=>{if(step>0){capture();step--;renderStep()}};document.getElementById('next').onclick=()=>{if(!capture())return;step++;renderStep()};const sb=document.getElementById('say');if(sb)sb.onclick=()=>speak(f.label);
+      const dict=document.getElementById('dictate');if(dict)dict.onclick=()=>dictate(f);
+      if(f.type==='photo'){const fileInput=document.getElementById('answer');fileInput.onchange=()=>{photoFile=fileInput.files?.[0]||null;const im=document.getElementById('preview');if(photoUrl)URL.revokeObjectURL(photoUrl);if(photoFile){photoUrl=URL.createObjectURL(photoFile);im.src=photoUrl;im.classList.remove('hidden')}}}
+      setTimeout(()=>speak(f.label),150);
+    }
+    function capture(){const fields=flow==='start'?starts:closes;const f=fields[step];const el=document.getElementById('answer');if(f.type==='photo'){if(photoFile){answers[f.key]=photoFile.name;answers[f.key+'Object']=photoFile}return true}const v=(el?.value||'').trim();if(f.required&&!v){el?.focus();alert('Completa este dato para continuar.');return false}answers[f.key]=v;if(f.key==='leader')data.name=v;save(data);return true}
+    function dictate(f){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Usa el micrófono del teclado para dictar en este campo.');document.getElementById('answer')?.focus();return}try{const r=new SR();r.lang='es-MX';r.interimResults=false;r.maxAlternatives=1;r.onresult=e=>{const t=e.results[0][0].transcript;const el=document.getElementById('answer');el.value=(el.value?el.value+' ':'')+t};r.onerror=()=>alert('No pude captar el dictado. Puedes usar el micrófono del teclado.');r.start()}catch{alert('Usa el micrófono del teclado para dictar en este campo.')}}
+    function message(){const a=answers;if(flow==='start')return `🟢 INICIO DE ACTIVIDAD\n\n👤 Líder de cuadrilla: ${a.leader}\n🧰 Auxiliar: ${a.auxiliary}\n📍 Cliente/Sitio: ${a.client}\n🗺 Ubicación: ${a.location}\n🛠 Actividad: ${a.activity}\n🎫 OT / Ticket: ${a.ot}\n📶 RDO: ${a.rdo}\n🕐 Hora inicio: ${a.startTime}\n\n📝 Trabajo a realizar: ${a.workPlanned}\n\n*Pendientes:*\n${a.startPending}\n\n📸 Evidencia inicial: ${a.startPhoto||'Sin foto adjunta'}`;
+      return `🏁 CIERRE DE ACTIVIDAD\n\n👤 Líder de cuadrilla: ${a.leader}\n🧰 Auxiliar: ${a.auxiliary}\n📍 Cliente/Sitio: ${a.client}\n🎫 OT / Ticket: ${a.ot}\n📶 RDO: ${a.rdo}\n🕐 Hora término: ${a.endTime}\n✅ Resultado: ${a.result}\n\n📝 Trabajo realizado: ${a.workDone}\n\n⚠️ Pendiente/Incidencia: ${a.incident}\n\n*Pendientes:*\n${a.closePending}\n\n📸 Evidencia final: ${a.endPhoto||'Sin foto adjunta'}`}
+    function showReview(){if(flow==='start'){data.active={...answers};delete data.active.startPhotoObject;save(data)}const text=message();app.innerHTML=`<section class="card"><div class="eyebrow">${flow==='start'?'Inicio de actividad':'Cierre de actividad'}</div><h1>Revisa el mensaje</h1><p>Así quedará antes de compartirlo.</p><div class="message" id="previewmsg"></div>${!(flow==='start'?answers.startPhotoObject:answers.endPhotoObject)?`<div class="hint">No adjuntaste foto; puedes volver y agregarla si hace falta.</div>`:''}<div class="actions"><button class="outline" id="edit">Editar respuestas</button><button class="primary" id="share">Compartir por WhatsApp</button></div><div class="hint">Se abrirá el menú del teléfono. Elige WhatsApp y luego el chat; el envío final lo confirmas tú.</div></section>`;document.getElementById('previewmsg').textContent=text;document.getElementById('edit').onclick=()=>{step=0;renderStep()};document.getElementById('share').onclick=()=>share(text)}
+    async function share(text){const btn=document.getElementById('share');btn.disabled=true;btn.textContent='Preparando…';const f=flow==='start'?answers.startPhotoObject:answers.endPhotoObject;try{if(navigator.share){const payload={title:flow==='start'?'Inicio de actividad':'Cierre de actividad',text};if(f&&typeof File!=='undefined'){const file=new File([f],f.name||'evidencia.jpg',{type:f.type||'image/jpeg'});if(!navigator.canShare||navigator.canShare({files:[file],text}))payload.files=[file]}await navigator.share(payload);if(flow==='close'){data.active=null;save(data)}done('Reporte compartido.')}else{await navigator.clipboard.writeText(text);if(flow==='close'){data.active=null;save(data)}done('Texto copiado. Abre WhatsApp, elige el grupo y pega el mensaje.')}}catch(e){if(e.name!=='AbortError'){try{await navigator.clipboard.writeText(text);done('No se abrió el menú para compartir. Copié el texto para que lo pegues en WhatsApp.')}catch{done('No se pudo compartir automáticamente. Mantén presionado el reporte para copiarlo.')}}else{btn.disabled=false;btn.textContent='Compartir por WhatsApp'}}}
+    function done(msg){app.innerHTML=`<section class="card"><div class="done-icon">✅</div><div class="eyebrow">Listo</div><h1>${esc(msg)}</h1><p>${flow==='start'?'La actividad quedó guardada en este teléfono para completar su cierre.':'El cierre quedó registrado en esta pantalla.'}</p><div class="choices"><button class="choice" id="home2"><span class="emoji">⌂</span><span>Volver al inicio</span></button></div></section>`;document.getElementById('home2').onclick=home}
+    function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    home();
+    if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  })();
+  </script>
+</body>
+</html>

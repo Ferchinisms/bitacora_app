@@ -1,0 +1,24 @@
+BITÁCORA DE ACTIVIDAD — PROTOTIPO ANDROID
+
+Contenido
+- index.html: aplicación de una sola pantalla con flujos guiados de inicio y cierre.
+- manifest.webmanifest, sw.js, icon.svg: instalación como PWA y caché básica.
+
+Para probar en computadora
+Sirve esta carpeta desde un servidor local HTTPS/localhost y abre la dirección en Chrome.
+
+Para publicarla sin costo en GitHub Pages
+1. Crea un repositorio público en GitHub.
+2. Sube estos cuatro archivos a la raíz.
+3. En Settings > Pages, publica la rama principal desde la raíz.
+4. Abre el enlace publicado desde Chrome en Android y elige “Instalar aplicación” o “Agregar a pantalla principal”.
+
+Alcance y privacidad
+- El borrador de actividad se guarda en localStorage en el teléfono.
+- No hay servidor ni cuentas; no se sincronizan borradores entre compañeros.
+- El código del repositorio y el enlace de GitHub Pages son públicos.
+- Las fotos se comparten como adjuntos si el teléfono y WhatsApp aceptan compartir texto y archivos juntos; si no, habrá que enviar la foto aparte.
+- El botón Compartir abre el menú del teléfono. La persona elige WhatsApp y el grupo y confirma el envío.
+- El dictado directo del navegador es opcional; puede usarse el micrófono del teclado si el botón de dictado no funciona.
+
+Nota: este prototipo conserva los nombres de campos y el orden de los formatos recibidos. Conviene revisar los emojis y saltos de línea con el grupo antes de usarlo en producción.
