@@ -7,7 +7,7 @@
   <meta name="description" content="Bitácora guiada de actividades para compartir reportes por WhatsApp.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <title>Bitácora de actividad</title>
+  <title>Bitácora NOC — Prueba visual</title>
   <style>
     :root{color-scheme:light;--ink:#17342f;--muted:#607570;--green:#13745f;--green2:#dff2eb;--paper:#f3f7f5;--line:#d8e4df;--orange:#c87522;--shadow:0 16px 36px #163b3020}
     *{box-sizing:border-box}body{margin:0;background:var(--paper);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);min-height:100vh}
@@ -18,11 +18,45 @@
     .topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}.text-button{background:transparent;border:0;color:var(--green);font-weight:700;padding:8px 4px}.progress{font-size:12px;color:var(--muted);font-weight:700}.bar{height:6px;background:#e7efeb;border-radius:9px;overflow:hidden;margin:0 0 22px}.bar span{display:block;height:100%;background:var(--green);border-radius:9px;transition:width .2s ease}.field-label{font-weight:800;font-size:21px;line-height:1.25;margin:0 0 7px}.field-help{font-size:13px;margin:0 0 14px}.control{width:100%;min-height:52px;border-radius:14px;border:1px solid #cbd9d3;background:#fff;padding:12px 14px;color:var(--ink);outline:none}.control:focus{border-color:var(--green);box-shadow:0 0 0 3px #13745f20}.control[type=time]{min-height:54px}.control.textarea{min-height:112px;resize:vertical}.filebox{border:1.5px dashed #b8cbc2;border-radius:16px;padding:16px;background:#fbfdfc}.filebox input{max-width:100%}.photo-preview{max-width:100%;max-height:230px;display:block;margin-top:12px;border-radius:12px}.voice-row{display:flex;gap:8px;margin-top:10px}.pill{border:1px solid var(--line);background:#fff;color:var(--green);font-weight:700;border-radius:999px;padding:9px 12px}.actions{display:flex;gap:10px;margin-top:24px}.primary,.outline{border-radius:14px;padding:13px 16px;font-weight:800}.primary{border:0;background:var(--green);color:white;flex:1}.outline{border:1px solid var(--line);background:white;color:var(--ink)}.hint{font-size:12px;color:var(--muted);margin-top:14px}.message{white-space:pre-wrap;word-break:break-word;background:#f7faf8;border:1px solid var(--line);border-radius:16px;padding:16px;font-size:14px;max-height:45vh;overflow:auto}.done-icon{font-size:42px;margin-bottom:6px}.alert{background:#fff4e6;border:1px solid #f0d5b1;color:#6d451d;padding:12px;border-radius:13px;font-size:13px;margin:14px 0}.saved{background:var(--green2);border-radius:12px;padding:11px 13px;font-size:13px;color:#155545;margin-bottom:16px}.hidden{display:none!important}
     footer{padding:18px 4px 0;text-align:center;color:var(--muted);font-size:11px}
     @media(min-width:540px){.shell{padding-left:24px;padding-right:24px}main{padding-top:22px}.card{padding:30px}}
+
+  /* BITÁCORA NOC — visual-only test theme */
+  :root{color-scheme:dark;--ink:#e8faff;--muted:#91b9c8;--green:#00e9a7;--green2:#073b36;--paper:#04101c;--line:#1c5267;--orange:#ffbf4c;--shadow:0 16px 44px #0009}
+  body{background:radial-gradient(ellipse at 90% 2%,#0c3550 0%,transparent 38%),radial-gradient(ellipse at 0% 78%,#07372e 0%,transparent 50%),#04101c;color:var(--ink)}
+  body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background-image:linear-gradient(#1c7280 1px,transparent 1px),linear-gradient(90deg,#1c7280 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(transparent,#000)}
+  .shell{position:relative;max-width:650px;padding-bottom:36px}
+  header{margin:0 -18px 18px;padding:26px 22px 24px;background:linear-gradient(125deg,#082f45dd,#071725dd),url('');border-bottom:1px solid #20c9df65;box-shadow:0 7px 32px #00c4ff18;position:relative;overflow:hidden}
+  header:after{content:"◉  NOC / FIELD OPS";position:absolute;right:16px;bottom:8px;font:700 9px system-ui;letter-spacing:2px;color:#51d8e5a9}
+  .brand{background:linear-gradient(135deg,#043c57,#006b69);border:1px solid #26e3ee;color:#5af9e7;box-shadow:0 0 20px #00eaff5c;width:52px;height:52px;border-radius:14px}
+  .brand-title{font-size:19px;color:#f5ffff;letter-spacing:.04em;text-transform:uppercase;text-shadow:0 0 18px #17c8f659}
+  .brand-sub{color:#7de1e9;letter-spacing:.04em}
+  .card{background:linear-gradient(145deg,#0b2739f7,#071827fa);border:1px solid #167b91;border-radius:20px;box-shadow:0 15px 50px #0008,inset 0 1px #5af9ff22;padding:24px}
+  .eyebrow{color:#33ddea;letter-spacing:.16em}
+  h1,.field-label{color:#f4feff}
+  p,.field-help,.hint{color:#a1c0ca}
+  .choice{background:linear-gradient(105deg,#034e41,#05352e);border:1px solid #15ef8a;border-radius:16px;box-shadow:0 0 22px #00e78c27,inset 0 1px #6fffc222;color:#effff9}
+  .choice.secondary{background:linear-gradient(110deg,#0b3149,#0a2034);border:1px solid #177f9d;color:#e9fbff;box-shadow:0 0 15px #00c8ff15}
+  .choice .emoji{filter:drop-shadow(0 0 7px #00ecdc88)}
+  .pill,.outline{background:#0b2639;color:#7ee8f0;border:1px solid #267b92}
+  .text-button{color:#63d9e8}
+  .primary{background:linear-gradient(100deg,#00c97e,#20f5a2);color:#022a23;border:1px solid #72ffbf;box-shadow:0 0 18px #00e59c4c}
+  .primary:disabled{opacity:.5}
+  .control{background:#081c2b;border:1px solid #31758c;color:#e9fbff}
+  .control:focus{border-color:#1af6bb;box-shadow:0 0 0 3px #1af6bb22}
+  .control::placeholder{color:#7b9eaa}
+  .filebox{background:#091e2e;border:1px dashed #2ca8ba}
+  .bar{background:#173b4c}.bar span{background:linear-gradient(90deg,#00c7f4,#14ec9b);box-shadow:0 0 10px #00e5bc}
+  .progress{color:#88e6e9}.saved{background:#06382f;color:#92ffe0;border:1px solid #1d9e79}
+  .message{background:#061b2a;border:1px solid #2c788b;color:#ddf9fc}
+  .alert{background:#382918;color:#ffd39a;border-color:#a26a27}
+  footer{color:#7298a6}
+  .actions{flex-wrap:wrap}.actions .primary{min-width:130px}
+  @media(min-width:540px){header{margin-left:-24px;margin-right:-24px}}
+
   </style>
 </head>
 <body>
   <div class="shell">
-    <header><div class="brand">✓</div><div><div class="brand-title">Bitácora de actividad</div><div class="brand-sub">Reportes listos para WhatsApp</div></div></header>
+    <header><div class="brand">✓</div><div><div class="brand-title">Bitácora de actividad</div><div class="brand-sub">OPERACIONES DE CAMPO · PRUEBA VISUAL</div></div></header>
     <main id="app" aria-live="polite"></main>
     <footer>Los datos del reporte se guardan solo en este teléfono.</footer>
   </div>
@@ -99,7 +133,7 @@
     function done(msg){app.innerHTML=`<section class="card"><div class="done-icon">✅</div><div class="eyebrow">Listo</div><h1>${esc(msg)}</h1><p>${flow==='start'?'La actividad quedó guardada en este teléfono para completar su cierre.':'El cierre quedó registrado en esta pantalla.'}</p><div class="choices"><button class="choice" id="home2"><span class="emoji">⌂</span><span>Volver al inicio</span></button></div></section>`;document.getElementById('home2').onclick=home}
     function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
     home();
-    if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    /* Vista de prueba: no registrar service worker nuevo. */
   })();
   </script>
 </body>
